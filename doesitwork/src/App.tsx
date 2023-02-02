@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { get } from "./util/api";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./pages/layout/Layout";
+import { LoginProvider } from "./util/LoginState";
 
 function App() {
     const [organization, setOrganization] = useState<string>(
@@ -36,21 +37,26 @@ function App() {
     }, []);
 
     return (
-        <ThemeProvider
-            theme={createTheme({
-                palette: { mode: "dark", primary: { main: organizationColor } },
-            })}
-        >
-            <CssBaseline />
-            <BrowserRouter>
-                <Routes>
-                    <Route
-                        path="/"
-                        element={<Layout organization={organization} />}
-                    ></Route>
-                </Routes>
-            </BrowserRouter>
-        </ThemeProvider>
+        <LoginProvider>
+            <ThemeProvider
+                theme={createTheme({
+                    palette: {
+                        mode: "dark",
+                        primary: { main: organizationColor },
+                    },
+                })}
+            >
+                <CssBaseline />
+                <BrowserRouter>
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={<Layout organization={organization} />}
+                        ></Route>
+                    </Routes>
+                </BrowserRouter>
+            </ThemeProvider>
+        </LoginProvider>
     );
 }
 

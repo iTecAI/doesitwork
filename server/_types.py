@@ -11,5 +11,12 @@ class AppState:
 
 
 class Admin(TypedDict):
+    user_id: str
     name: str
     password_hash: str
+    email: str
+
+
+class Session(TypedDict):
+    user_id: str
+    uuid: str

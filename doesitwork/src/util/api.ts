@@ -28,12 +28,10 @@ export async function request<T>(
                 : undefined,
     });
 
-    let data: T;
+    let data: T = (await result.text()) as T;
     try {
-        data = await result.json();
-    } catch {
-        data = {} as T;
-    }
+        data = JSON.parse(data as string);
+    } catch {}
 
     if (result.status < 400) {
         return { success: true, data: data };
@@ -43,7 +41,7 @@ export async function request<T>(
             code: result.status,
             detail:
                 data && typeof (data as any).detail === "string"
-                    ? JSON.parse((data as any).detail)
+                    ? (data as any).detail
                     : null,
         };
     }

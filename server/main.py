@@ -5,6 +5,8 @@ import os
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from hashlib import sha256
+from controllers import *
+from uuid import uuid4
 
 
 def initialize(state: State):
@@ -22,7 +24,7 @@ def initialize(state: State):
     admins_collection: Collection = state.database["admins"]
     if admins_collection.estimated_document_count() == 0:
         admins_collection.insert_one(
-            Admin(name=os.getenv("ROOT_USER", "admin"), password_hash=sha256(os.getenv("ROOT_PASS", "admin").encode("utf-8")).hexdigest()))
+            Admin(name=os.getenv("ROOT_USER", "admin"), password_hash=sha256(os.getenv("ROOT_PASS", "admin").encode("utf-8")).hexdigest(), email="", user_id=uuid4().hex))
 
 
 def dep_appState(state: State) -> AppState:
@@ -36,5 +38,5 @@ async def get_theme_info(app_state: AppState) -> dict:
         "name": app_state.organization
     }
 
-app = Starlite(route_handlers=[get_theme_info], on_startup=[initialize],
+app = Starlite(route_handlers=[get_theme_info, AdminController], on_startup=[initialize],
                dependencies={"app_state": Provide(dep_appState)})
