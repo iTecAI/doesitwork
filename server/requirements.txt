@@ -2,3 +2,4 @@ starlite
 starlette
 pymongo
 python-dotenv
+uvicorn

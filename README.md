@@ -11,6 +11,7 @@ MONGO_PORT=<DB PORT, default 27017>
 MONGO_USER=<DB USER, default none>
 MONGO_PASS=<DB PASSWORD, default none>
 MONGO_TLS=<DB TLS (yes/no), default no>
+MONGO_DATABASE=<DB NAME, default "doesitwork">
 
 # Root user initial setup
 ROOT_USER=<INITIAL ROOT USERNAME, default admin>
