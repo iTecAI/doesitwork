@@ -1,3 +1,4 @@
 starlite
 starlette
 pymongo
+python-dotenv
