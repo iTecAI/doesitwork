@@ -1,0 +1,82 @@
+.layout-root {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    .navbar {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        display: inline-block;
+        width: 100%;
+        height: 48px;
+
+        .icon {
+            position: relative;
+            display: inline-block;
+            height: 32px;
+            width: auto;
+            margin: 8px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .title {
+            padding-top: 6px;
+            font-weight: 300;
+        }
+    }
+
+    .content-area {
+        position: absolute;
+        top: 48px;
+        left: 0px;
+        display: inline-block;
+        height: calc(100% - 80px);
+        width: 100%;
+        overflow-y: auto;
+    }
+
+    .footer {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+        height: 32px;
+        border-radius: 0px;
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        user-select: none;
+
+        .MuiStack-root {
+            width: fit-content;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        a {
+            color: white;
+        }
+
+        svg {
+            margin-top: 4px;
+            opacity: 0.6;
+        }
+
+        .admin-login-btn {
+            position: absolute;
+            top: 50%;
+            right: 0px;
+            transform: translate(0, -50%);
+            border-radius: 0px;
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+    }
+}
