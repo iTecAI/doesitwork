@@ -1,0 +1,67 @@
+.settings-grid {
+    padding: 8px;
+
+    .settings-panel {
+        position: relative;
+        padding: 16px;
+        padding-top: 64px;
+        box-sizing: border-box;
+        display: inline-block;
+        height: fit-content;
+        width: 100%;
+        overflow: hidden;
+
+        .panel-title {
+            position: absolute;
+            display: inline-block;
+            width: calc(100% + 32px);
+            height: 48px;
+            background-color: #00000044;
+            user-select: none;
+            top: 0px;
+            left: 0px;
+
+            .icon {
+                position: absolute;
+                top: calc(50% + 2px);
+                left: 12px;
+                transform: translate(0, -50%);
+            }
+
+            .text {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+
+                .arrow {
+                    vertical-align: text-bottom;
+                    margin-top: 11px;
+                    opacity: 0.5;
+                }
+
+                .content {
+                    font-size: 20px;
+                }
+            }
+        }
+
+        .panel-content {
+            display: inline-block;
+            width: 100%;
+
+            @media screen and (max-width: 1200px) {
+                & {
+                    height: fit-content;
+                }
+            }
+
+            @media screen and (min-width: 1201px) {
+                & {
+                    height: calc(100vh - 188px);
+                    min-height: 512px;
+                }
+            }
+        }
+    }
+}
