@@ -100,6 +100,14 @@
                     right: 12px;
                     transform: translate(0, -50%);
                 }
+
+                .current-user {
+                    position: absolute;
+                    top: 50%;
+                    right: 16px;
+                    transform: translate(0, -50%);
+                    color: gold;
+                }
             }
         }
     }

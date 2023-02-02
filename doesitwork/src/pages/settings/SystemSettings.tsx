@@ -10,6 +10,7 @@ import {
     MdLocationPin,
     MdQuestionAnswer,
     MdRefresh,
+    MdStar,
 } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { AdminUser } from "../../types";
@@ -107,10 +108,12 @@ function UserPanel() {
                     <Typography variant="body2" className="email">
                         {v.email}
                     </Typography>
-                    {login.loggedIn && v.user_id !== login.user.user_id && (
+                    {login.loggedIn && v.user_id !== login.user.user_id ? (
                         <IconButton className="delete" color="error">
                             <MdDelete />
                         </IconButton>
+                    ) : (
+                        <MdStar className="current-user" size={24} />
                     )}
                 </Paper>
             ))}
