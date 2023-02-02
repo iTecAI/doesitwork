@@ -3,8 +3,11 @@ import {
     AppBar,
     Box,
     Button,
+    Chip,
+    Divider,
     IconButton,
     InputAdornment,
+    ListItem,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -92,6 +95,25 @@ export function Layout(props: { organization: string }) {
                     anchorEl={adminAnchor}
                     onClose={() => setAdminAnchor(null)}
                 >
+                    <ListItem>
+                        <ListItemText>
+                            User:{" "}
+                            <Chip
+                                sx={{
+                                    marginLeft: "8px",
+                                    transform: "translate(0, -1px)",
+                                }}
+                                size="small"
+                                variant="outlined"
+                                label={
+                                    loginState.loggedIn
+                                        ? loginState.user.name
+                                        : "NaN"
+                                }
+                            />
+                        </ListItemText>
+                    </ListItem>
+                    <Divider />
                     <AdminMenuItem
                         text="Account Settings"
                         icon={<MdManageAccounts size={20} />}
