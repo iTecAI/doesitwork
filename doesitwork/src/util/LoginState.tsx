@@ -74,6 +74,7 @@ export function LoginProvider(props: { children?: ReactNode | ReactNode[] }) {
                           user: user as AdminUser,
                           login,
                           logout: () => {
+                              window.localStorage.removeItem("token");
                               del<null>("/admin").then((result) => {
                                   setSession(null);
                                   setUser(null);

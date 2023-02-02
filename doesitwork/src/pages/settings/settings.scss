@@ -14,12 +14,29 @@
         .panel-title {
             position: absolute;
             display: inline-block;
-            width: calc(100% + 32px);
+            width: 100%;
             height: 48px;
             background-color: #00000044;
             user-select: none;
             top: 0px;
             left: 0px;
+
+            .refresh-btn {
+                position: absolute;
+                top: 50%;
+                right: 8px;
+                transform: translate(0, -50%);
+
+                svg {
+                    transition: transform 0.2s !important;
+                }
+
+                &:hover {
+                    svg {
+                        transform: rotate(30deg);
+                    }
+                }
+            }
 
             .icon {
                 position: absolute;
@@ -60,6 +77,28 @@
                 & {
                     height: calc(100vh - 188px);
                     min-height: 512px;
+                }
+            }
+
+            /* User Panel */
+            .user-item {
+                position: relative;
+                padding: 12px;
+                padding-left: 16px;
+                padding-right: 48px;
+                .username {
+                    font-size: 20px;
+                }
+
+                .email {
+                    opacity: 0.5;
+                }
+
+                .delete {
+                    position: absolute;
+                    top: 50%;
+                    right: 12px;
+                    transform: translate(0, -50%);
                 }
             }
         }

@@ -89,3 +89,11 @@ class AdminController(Controller):
                                                   k: v for k, v in user.items() if k != "_id"}, upsert=True)
             return None
         raise NotFoundException(detail="User not found.")
+
+    @get("/all", status_code=200, guards=[guard_isAdmin])
+    async def list_users(self, app_state: AppState) -> list[AdminUserData]:
+        ret: list[AdminUserData] = []
+        for a in app_state.database.admins.find({}):
+            ret.append(AdminUserData(
+                user_id=a["user_id"], name=a["name"], email=a["email"]))
+        return ret
