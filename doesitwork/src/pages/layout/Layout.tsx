@@ -18,7 +18,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import "./layout.scss";
 import {
     MdAdminPanelSettings,
@@ -66,6 +66,8 @@ export function Layout(props: { organization: string }) {
     const [adminAnchor, setAdminAnchor] = useState<null | HTMLElement>(null);
 
     const [dialogAccount, setDialogAccount] = useState<boolean>(false);
+
+    const nav = useNavigate();
 
     return (
         <Box className="layout-root">
@@ -124,7 +126,7 @@ export function Layout(props: { organization: string }) {
                         text="System Settings"
                         icon={<MdSettings size={20} />}
                         setAnchor={setAdminAnchor}
-                        event={() => {}}
+                        event={() => nav("/settings")}
                     />
                     <AdminMenuItem
                         text="Log Out"

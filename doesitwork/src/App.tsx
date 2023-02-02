@@ -4,6 +4,7 @@ import { get } from "./util/api";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./pages/layout/Layout";
 import { LoginProvider } from "./util/LoginState";
+import { SystemSettings } from "./pages/settings/SystemSettings";
 
 function App() {
     const [organization, setOrganization] = useState<string>(
@@ -52,7 +53,12 @@ function App() {
                         <Route
                             path="/"
                             element={<Layout organization={organization} />}
-                        ></Route>
+                        >
+                            <Route
+                                path="/settings"
+                                element={<SystemSettings />}
+                            />
+                        </Route>
                     </Routes>
                 </BrowserRouter>
             </ThemeProvider>
