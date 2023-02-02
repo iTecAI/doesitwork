@@ -63,22 +63,23 @@
             }
         }
 
+        @media screen and (max-width: 1200px) {
+            & {
+                height: fit-content;
+            }
+        }
+
+        @media screen and (min-width: 1201px) {
+            & {
+                height: calc(100vh - 104px);
+                min-height: 512px;
+            }
+        }
+
         .panel-content {
             display: inline-block;
             width: 100%;
-
-            @media screen and (max-width: 1200px) {
-                & {
-                    height: fit-content;
-                }
-            }
-
-            @media screen and (min-width: 1201px) {
-                & {
-                    height: calc(100vh - 188px);
-                    min-height: 512px;
-                }
-            }
+            height: fit-content;
 
             /* User Panel */
             .user-item {
