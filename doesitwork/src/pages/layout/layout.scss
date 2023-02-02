@@ -29,6 +29,13 @@
             padding-top: 6px;
             font-weight: 300;
         }
+
+        .admin-menu {
+            position: absolute;
+            top : 50%;
+            right: 4px;
+            transform: translate(0, -50%);
+        }
     }
 
     .content-area {
@@ -84,4 +91,17 @@
 .admin-login .MuiPaper-root {
     padding: 16px;
     box-sizing: border-box;
+}
+
+.admin-menu-panel .MuiList-root {
+    padding: 0px;
+
+    .MuiButtonBase-root {
+        padding-top: 12px;
+        padding-bottom: 12px;
+
+        .MuiListItemText-root {
+            text-align: right;
+        }
+    }
 }

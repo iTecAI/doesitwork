@@ -1,10 +1,10 @@
-from starlite import ASGIConnection, BaseRouteHandler, Controller, get, post, State, delete, Provide, Request
-from starlite.exceptions import NotFoundException, PermissionDeniedException
+from starlite import Controller, get, post, delete, Provide
+from starlite.exceptions import NotFoundException
 from typing import TypedDict, Union
 from _types import AppState, Admin, Session
 import hashlib
 import uuid
-from pymongo.collection import Collection
+from deps import *
 
 
 class Login(TypedDict):
@@ -18,24 +18,14 @@ class AdminUserData(TypedDict):
     email: str
 
 
-def guard_isAdmin(connection: ASGIConnection, _: BaseRouteHandler):
-    if not "authorization" in connection.headers.keys():
-        raise PermissionDeniedException(
-            detail="A valid session token is required to access this endpoint")
-
-    session_collection: Collection = connection.app.state.database.sessions
-    if session_collection.find_one({"uuid": connection.headers["authorization"]}) == None:
-        raise PermissionDeniedException(
-            detail="A valid session token is required to access this endpoint")
+class UpdatePassword(TypedDict):
+    current: str
+    new: str
 
 
-def getSession(request: Request) -> Union[Session, None]:
-    if "authorization" in request.headers.keys():
-        result = request.app.state.database.sessions.find_one(
-            {"uuid": request.headers["authorization"]})
-        return result
-    else:
-        return None
+class UpdateSettings(TypedDict):
+    name: str
+    email: str
 
 
 class AdminController(Controller):
@@ -69,4 +59,33 @@ class AdminController(Controller):
 
         if user:
             return AdminUserData(user_id=user["user_id"], name=user["name"], email=user["email"])
+        raise NotFoundException(detail="User not found.")
+
+    @post("/settings/password", status_code=200, dependencies={"session": Provide(getSession)}, guards=[guard_isAdmin])
+    async def update_user_password(self, app_state: AppState, session: Union[Session, None], data: UpdatePassword) -> None:
+        user: Admin = app_state.database.admins.find_one(
+            {"user_id": session["user_id"]})
+
+        if user:
+            if hashlib.sha256(data["current"].encode("utf-8")).hexdigest() != user["password_hash"]:
+                raise PermissionDeniedException(
+                    detail="Incorrect password supplied.")
+            user["password_hash"] = hashlib.sha256(
+                data["new"].encode("utf-8")).hexdigest()
+            app_state.database.admins.replace_one({"user_id": user["user_id"]}, {
+                                                  k: v for k, v in user.items() if k != "_id"}, upsert=True)
+            return None
+        raise NotFoundException(detail="User not found.")
+
+    @post("/settings", status_code=200, dependencies={"session": Provide(getSession)}, guards=[guard_isAdmin])
+    async def update_user_settings(self, app_state: AppState, session: Union[Session, None], data: UpdateSettings) -> None:
+        user: Admin = app_state.database.admins.find_one(
+            {"user_id": session["user_id"]})
+
+        if user:
+            user["email"] = data["email"]
+            user["name"] = data["name"]
+            app_state.database.admins.replace_one({"user_id": user["user_id"]}, {
+                                                  k: v for k, v in user.items() if k != "_id"}, upsert=True)
+            return None
         raise NotFoundException(detail="User not found.")

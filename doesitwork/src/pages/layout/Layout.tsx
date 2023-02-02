@@ -3,7 +3,12 @@ import {
     AppBar,
     Box,
     Button,
+    IconButton,
     InputAdornment,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
     Paper,
     Popover,
     TextField,
@@ -12,9 +17,40 @@ import {
 import { Stack } from "@mui/system";
 import { Outlet } from "react-router";
 import "./layout.scss";
-import { MdLogin, MdPassword, MdPerson, MdStar } from "react-icons/md";
+import {
+    MdAdminPanelSettings,
+    MdLogin,
+    MdLogout,
+    MdManageAccounts,
+    MdPassword,
+    MdPerson,
+    MdSettings,
+    MdStar,
+} from "react-icons/md";
 import { useState } from "react";
 import { useLogin } from "../../util/LoginState";
+import { AccountSettingsDialog } from "./AccountSettings";
+
+function AdminMenuItem(props: {
+    text: string;
+    icon: JSX.Element;
+    setAnchor: (anchor: null | HTMLElement) => void;
+    event?: () => void;
+}) {
+    return (
+        <MenuItem
+            onClick={() => {
+                props.setAnchor(null);
+                if (props.event) {
+                    props.event();
+                }
+            }}
+        >
+            <ListItemIcon>{props.icon}</ListItemIcon>
+            <ListItemText>{props.text}</ListItemText>
+        </MenuItem>
+    );
+}
 
 export function Layout(props: { organization: string }) {
     const [loginAnchor, setLoginAnchor] = useState<null | HTMLElement>(null);
@@ -23,6 +59,10 @@ export function Layout(props: { organization: string }) {
     const [loginUsername, setLoginUsername] = useState<string>("");
     const [loginPassword, setLoginPassword] = useState<string>("");
     const [loginError, setLoginError] = useState<boolean>(false);
+
+    const [adminAnchor, setAdminAnchor] = useState<null | HTMLElement>(null);
+
+    const [dialogAccount, setDialogAccount] = useState<boolean>(false);
 
     return (
         <Box className="layout-root">
@@ -38,6 +78,39 @@ export function Layout(props: { organization: string }) {
                         {props.organization ? ` @ ${props.organization}` : ""}
                     </Typography>
                 </Stack>
+                {loginState.loggedIn && (
+                    <IconButton
+                        className="admin-menu"
+                        onClick={(event) => setAdminAnchor(event.currentTarget)}
+                    >
+                        <MdAdminPanelSettings />
+                    </IconButton>
+                )}
+                <Menu
+                    className="admin-menu-panel"
+                    open={Boolean(adminAnchor)}
+                    anchorEl={adminAnchor}
+                    onClose={() => setAdminAnchor(null)}
+                >
+                    <AdminMenuItem
+                        text="Account Settings"
+                        icon={<MdManageAccounts size={20} />}
+                        setAnchor={setAdminAnchor}
+                        event={() => setDialogAccount(true)}
+                    />
+                    <AdminMenuItem
+                        text="System Settings"
+                        icon={<MdSettings size={20} />}
+                        setAnchor={setAdminAnchor}
+                        event={() => {}}
+                    />
+                    <AdminMenuItem
+                        text="Log Out"
+                        icon={<MdLogout size={20} />}
+                        setAnchor={setAdminAnchor}
+                        event={() => loginState.loggedIn && loginState.logout()}
+                    />
+                </Menu>
             </AppBar>
             <Box className="content-area">
                 <Outlet />
@@ -147,6 +220,10 @@ export function Layout(props: { organization: string }) {
                     </Button>
                 </Stack>
             </Popover>
+            <AccountSettingsDialog
+                open={dialogAccount}
+                setOpen={setDialogAccount}
+            />
         </Box>
     );
 }

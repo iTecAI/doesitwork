@@ -15,6 +15,7 @@ type LoginContextType =
           user: AdminUser;
           login: (username: string, password: string) => Promise<boolean>;
           logout: () => void;
+          refresh: () => void;
       }
     | {
           loggedIn: false;
@@ -77,6 +78,20 @@ export function LoginProvider(props: { children?: ReactNode | ReactNode[] }) {
                                   setSession(null);
                                   setUser(null);
                               });
+                          },
+                          refresh: () => {
+                              if (window.localStorage.getItem("token")) {
+                                  get<AdminUser>("/admin/").then((result) => {
+                                      if (result.success) {
+                                          setUser(result.data);
+                                          setSession(
+                                              window.localStorage.getItem(
+                                                  "token"
+                                              )
+                                          );
+                                      }
+                                  });
+                              }
                           },
                       }
                     : {
