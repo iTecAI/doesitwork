@@ -11,6 +11,7 @@ import {
 } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useLogin } from "../../util/LoginState";
+import { LocationPanel } from "./panels/LocationPanel";
 import { UserPanel } from "./panels/UserPanel";
 import "./settings.scss";
 
@@ -54,15 +55,6 @@ function CategoryPanel() {
         <PanelWrapper
             text="Categories"
             icon={<MdCategory size={24} />}
-        ></PanelWrapper>
-    );
-}
-
-function LocationPanel() {
-    return (
-        <PanelWrapper
-            text="Locations"
-            icon={<MdLocationPin size={24} />}
         ></PanelWrapper>
     );
 }

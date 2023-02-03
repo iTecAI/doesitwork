@@ -110,6 +110,32 @@
                     color: gold;
                 }
             }
+
+            /* Location Panel */
+            .location-item {
+                position: relative;
+                padding: 12px;
+                padding-left: 16px;
+                padding-right: 48px;
+
+                &.icon {
+                    padding-left: 48px;
+
+                    .icon {
+                        position: absolute;
+                        top: 50%;
+                        left: 12px;
+                        transform: translate(0, -50%);
+                    }
+                }
+
+                .parent {
+                    font-size: 12px;
+                    opacity: 0.6;
+                    margin-top: -4px;
+                    pointer-events: none;
+                }
+            }
         }
     }
 }
