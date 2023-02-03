@@ -1,4 +1,4 @@
-from starlite import Controller, get, post, delete, Provide
+from starlite import Controller, get, post, delete, Provide, put
 from starlite.exceptions import NotFoundException
 from typing import TypedDict, Union
 from _types import AppState, Admin, Session
@@ -28,6 +28,12 @@ class UpdateSettings(TypedDict):
     email: str
 
 
+class NewUser(TypedDict):
+    name: str
+    email: str
+    password: str
+
+
 class AdminController(Controller):
     path = "/admin"
 
@@ -51,6 +57,13 @@ class AdminController(Controller):
     async def logout(self, app_state: AppState, session: Union[Session, None]) -> None:
         if session:
             app_state.database.sessions.delete_one({"uuid": session["uuid"]})
+
+    @put("", status_code=200, guards=[guard_isAdmin])
+    async def create_user(self, app_state: AppState, data: NewUser) -> str:
+        newAdmin = Admin(user_id=uuid.uuid4().hex, name=data["name"], password_hash=hashlib.sha256(
+            data["password"].encode("utf-8")).hexdigest(), email=data["email"])
+        app_state.database.admins.insert_one(newAdmin)
+        return newAdmin["user_id"]
 
     @get("", dependencies={"session": Provide(getSession)}, guards=[guard_isAdmin])
     async def get_user_data(self, app_state: AppState, session: Union[Session, None]) -> AdminUserData:
@@ -97,3 +110,8 @@ class AdminController(Controller):
             ret.append(AdminUserData(
                 user_id=a["user_id"], name=a["name"], email=a["email"]))
         return ret
+
+    @delete("/{user_id:str}", status_code=204, guards=[guard_isAdmin])
+    async def delete_user(self, app_state: AppState, user_id: str) -> None:
+        app_state.database.admins.delete_many({"user_id": user_id})
+        app_state.database.sessions.delete_many({"user_id": user_id})

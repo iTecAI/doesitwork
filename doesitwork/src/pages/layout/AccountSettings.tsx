@@ -18,7 +18,7 @@ import { MdCancel, MdCheck, MdEmail, MdPerson } from "react-icons/md";
 import { post } from "../../util/api";
 import { useLogin } from "../../util/LoginState";
 
-const EMAIL_REGEX =
+export const EMAIL_REGEX =
     /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
 export function AccountSettingsDialog(props: {

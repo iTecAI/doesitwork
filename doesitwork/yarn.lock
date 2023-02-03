@@ -6830,6 +6830,11 @@ map-obj@^4.0.0:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-4.3.0.tgz#9304f906e93faae70880da102a9f1df0ea8bb05a"
   integrity sha512-hdN1wVrZbb29eBGiGjJbeP8JbKjq1urkHJ/LIP/NY48MZ1QVXUsQBV1G1zvYFHn1XE06cwjBsOI2K3Ulnj1YXQ==
 
+material-ui-confirm@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/material-ui-confirm/-/material-ui-confirm-3.0.8.tgz#b64e387e6f315c9ecc8c4358fd57d33f9171eddc"
+  integrity sha512-FiMVNOf1axOoFX4iXvbdDkjrHdv4numwt8v2yan4rOARzcgWXHhm8mOcQiOdGswSVBpfGKxNvHOIR7Xr8HV9NQ==
+
 mdn-data@2.0.14:
   version "2.0.14"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"

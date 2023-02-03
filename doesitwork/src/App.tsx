@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Layout } from "./pages/layout/Layout";
 import { LoginProvider } from "./util/LoginState";
 import { SystemSettings } from "./pages/settings/SystemSettings";
+import { ConfirmProvider } from "material-ui-confirm";
 
 function App() {
     const [organization, setOrganization] = useState<string>(
@@ -48,19 +49,21 @@ function App() {
                 })}
             >
                 <CssBaseline />
-                <BrowserRouter>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<Layout organization={organization} />}
-                        >
+                <ConfirmProvider>
+                    <BrowserRouter>
+                        <Routes>
                             <Route
-                                path="/settings"
-                                element={<SystemSettings />}
-                            />
-                        </Route>
-                    </Routes>
-                </BrowserRouter>
+                                path="/"
+                                element={<Layout organization={organization} />}
+                            >
+                                <Route
+                                    path="/settings"
+                                    element={<SystemSettings />}
+                                />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </ConfirmProvider>
             </ThemeProvider>
         </LoginProvider>
     );
