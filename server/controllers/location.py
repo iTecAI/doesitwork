@@ -36,3 +36,17 @@ class LocationController(Controller):
         ) else "root", name=data["name"], icon=data["icon"] if "icon" in data.keys() else None)
         app_state.database.locations.insert_one(newLoc)
         return newLoc["location_id"]
+
+    @post("/{location_id:str}", status_code=200, guards=[guard_isAdmin])
+    async def edit_location(self, app_state: AppState, location_id: str, data: CreateLocation) -> str:
+        item: Location = app_state.database.locations.find_one(
+            {"location_id": location_id})
+        if item:
+            item["icon"] = data["icon"]
+            item["name"] = data["name"]
+            item["parent_id"] = data["parent"]
+            app_state.database.locations.replace_one(
+                {"location_id": item["location_id"]}, item, upsert=True)
+            return item["location_id"]
+        else:
+            raise NotFoundException(detail="Location not found")
