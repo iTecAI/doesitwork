@@ -116,7 +116,14 @@
                 position: relative;
                 padding: 12px;
                 padding-left: 16px;
-                padding-right: 48px;
+                padding-right: 96px;
+                box-sizing: border-box;
+
+                * {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
 
                 &.icon {
                     padding-left: 48px;
@@ -134,6 +141,14 @@
                     opacity: 0.6;
                     margin-top: -4px;
                     pointer-events: none;
+                    width: 100%;
+                }
+
+                .buttons {
+                    position: absolute;
+                    top: 50%;
+                    right: 8px;
+                    transform: translate(0, -50%);
                 }
             }
         }
