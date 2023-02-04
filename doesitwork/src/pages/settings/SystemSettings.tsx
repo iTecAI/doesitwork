@@ -11,6 +11,7 @@ import {
 } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useLogin } from "../../util/LoginState";
+import { CategoryPanel } from "./panels/CategoryPanel";
 import { LocationPanel } from "./panels/LocationPanel";
 import { UserPanel } from "./panels/UserPanel";
 import "./settings.scss";
@@ -47,15 +48,6 @@ export function PanelWrapper(props: {
                 <Box className="panel-content">{props.children}</Box>
             </Paper>
         </Grid>
-    );
-}
-
-function CategoryPanel() {
-    return (
-        <PanelWrapper
-            text="Categories"
-            icon={<MdCategory size={24} />}
-        ></PanelWrapper>
     );
 }
 

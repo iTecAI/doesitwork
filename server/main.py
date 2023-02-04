@@ -38,5 +38,5 @@ async def get_theme_info(app_state: AppState) -> dict:
         "name": app_state.organization
     }
 
-app = Starlite(route_handlers=[get_theme_info, AdminController, LocationController], on_startup=[initialize],
+app = Starlite(route_handlers=[get_theme_info, AdminController, LocationController, CategoryController], on_startup=[initialize],
                dependencies={"app_state": Provide(dep_appState)})
