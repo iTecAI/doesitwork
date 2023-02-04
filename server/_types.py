@@ -34,3 +34,17 @@ class Category(TypedDict):
     name: str
     icon: str
     flags: list[str]
+
+
+class Vote(TypedDict):
+    working: bool
+    flags: list[str]
+    timestamp: float
+
+
+class Service(TypedDict):
+    service_id: str
+    name: str
+    category: str
+    location: str
+    votes: list[Vote]

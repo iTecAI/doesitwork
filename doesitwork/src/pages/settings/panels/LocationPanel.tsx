@@ -301,13 +301,7 @@ function LocationItem(props: {
     }, [props.location]);
 
     return (
-        <Paper
-            className={[
-                "location-item",
-                props.location.icon ? "icon" : "",
-            ].join(" ")}
-            elevation={4}
-        >
+        <Paper className={"location-item icon"} elevation={4}>
             {props.location.icon && (MdIcons as any)[props.location.icon] ? (
                 (MdIcons as any)[props.location.icon]({
                     size: 24,

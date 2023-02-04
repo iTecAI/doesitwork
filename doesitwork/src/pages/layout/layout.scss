@@ -28,6 +28,8 @@
         .title {
             padding-top: 6px;
             font-weight: 300;
+            user-select: none;
+            cursor: pointer;
         }
 
         .admin-menu {

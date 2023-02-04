@@ -78,7 +78,11 @@ export function Layout(props: { organization: string }) {
                         className="icon"
                         alt="Application icon"
                     />
-                    <Typography variant="h5" className="title">
+                    <Typography
+                        variant="h5"
+                        className="title"
+                        onClick={() => nav("/")}
+                    >
                         DoesItWork
                         {props.organization ? ` @ ${props.organization}` : ""}
                     </Typography>
