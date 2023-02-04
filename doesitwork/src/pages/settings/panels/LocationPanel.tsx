@@ -14,12 +14,13 @@ import {
 import { useEffect, useState } from "react";
 import { MdLocationPin } from "react-icons/md";
 import { Location } from "../../../types";
-import { get, post } from "../../../util/api";
+import { del, get, post } from "../../../util/api";
 import { PanelWrapper } from "../SystemSettings";
 import { MdCancel, MdCheck } from "react-icons/md";
 import * as MdIcons from "react-icons/md";
 import { Stack } from "@mui/system";
 import { IconSelector } from "../../../components/IconSelect/IconSelector";
+import { useConfirm } from "material-ui-confirm";
 
 function CreateLocationDialog(props: {
     open: boolean;
@@ -280,6 +281,7 @@ function LocationItem(props: {
 }) {
     const [parent, setParent] = useState<string>(props.location.parent_id);
     const [editing, setEditing] = useState<boolean>(false);
+    const confirm = useConfirm();
 
     useEffect(() => {
         if (
@@ -324,7 +326,22 @@ function LocationItem(props: {
                 <IconButton onClick={() => setEditing(true)}>
                     <MdIcons.MdEdit size={20} />
                 </IconButton>
-                <IconButton color="error">
+                <IconButton
+                    color="error"
+                    onClick={() =>
+                        confirm({
+                            description: `This will permanently delete "${props.location.name}" and all services attached to it.`,
+                        }).then(() => {
+                            del<null>(
+                                `/locations/${props.location.location_id}`
+                            ).then((result) => {
+                                if (result.success) {
+                                    props.load();
+                                }
+                            });
+                        })
+                    }
+                >
                     <MdIcons.MdDelete size={20} />
                 </IconButton>
             </Stack>

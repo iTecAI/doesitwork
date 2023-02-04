@@ -1,4 +1,4 @@
-from starlite import Controller, get, post, NotFoundException
+from starlite import Controller, get, post, NotFoundException, delete
 from _types import AppState, Location
 from uuid import uuid4
 from deps import guard_isAdmin
@@ -48,5 +48,17 @@ class LocationController(Controller):
             app_state.database.locations.replace_one(
                 {"location_id": item["location_id"]}, item, upsert=True)
             return item["location_id"]
+        else:
+            raise NotFoundException(detail="Location not found")
+
+    @delete("/{location_id:str}", status_code=204, guards=[guard_isAdmin])
+    async def delete_location(self, app_state: AppState, location_id: str) -> None:
+        item: Location = app_state.database.locations.find_one(
+            {"location_id": location_id})
+        if item:
+            app_state.database.locations.update_many({"parent_id": item["location_id"]}, {
+                                                     "$set": {"parent_id": item["parent_id"]}})
+            app_state.database.locations.delete_one(
+                {"location_id": item["location_id"]})
         else:
             raise NotFoundException(detail="Location not found")
