@@ -6,6 +6,7 @@ import { Layout } from "./pages/layout/Layout";
 import { LoginProvider } from "./util/LoginState";
 import { SystemSettings } from "./pages/settings/SystemSettings";
 import { ConfirmProvider } from "material-ui-confirm";
+import { IndexPage } from "./pages/main/Index";
 
 function App() {
     const [organization, setOrganization] = useState<string>(
@@ -59,6 +60,11 @@ function App() {
                                 <Route
                                     path="/settings"
                                     element={<SystemSettings />}
+                                />
+                                <Route path="" element={<IndexPage />} />
+                                <Route
+                                    path="/location/:location_id"
+                                    element={<IndexPage />}
                                 />
                             </Route>
                         </Routes>

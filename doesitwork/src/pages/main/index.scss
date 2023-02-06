@@ -1,0 +1,51 @@
+.index-content {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 16px;
+
+    .search {
+        position: relative;
+    }
+
+    .content-area {
+        position: relative;
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 16px;
+        margin-top: -32px;
+        width: 100%;
+        height: calc(100% - 72px);
+        overflow: auto;
+
+        .location-item {
+            padding: 16px;
+            position: relative;
+            box-sizing: border-box;
+
+            .expand-btn {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                transition: transform 0.2s;
+
+                &.expanded {
+                    transform: rotate(180deg);
+                }
+            }
+
+            .location-children {
+                padding: 8px;
+            }
+        }
+
+        .service-item {
+            position: relative;
+            padding: 16px;
+        }
+    }
+}
