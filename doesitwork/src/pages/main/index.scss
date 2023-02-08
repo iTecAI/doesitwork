@@ -70,7 +70,11 @@
             padding: 16px;
 
             .category-select {
-                width: calc(max(128px, 15%) + 0px);
+                width: calc(max(256px, 15%) + 0px);
+            }
+
+            .create-btn {
+                min-width: 57px;
             }
         }
     }

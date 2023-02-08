@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import { useLocation, useParams } from "react-router";
 import { Category, Location, Service } from "../../types";
-import { get } from "../../util/api";
+import { get, post } from "../../util/api";
 import "./index.scss";
 import * as MdIcons from "react-icons/md";
 import { isEqual } from "lodash";
@@ -32,7 +32,11 @@ type Search = {
     text: string;
 };
 
-function ServiceItem(props: { self: Service; categories: Category[] }) {
+function ServiceItem(props: {
+    self: Service;
+    categories: Category[];
+    reload: () => void;
+}) {
     const category: Category | null =
         props.categories.filter(
             (v) => props.self.category === v.category_id
@@ -62,6 +66,7 @@ function ServiceItem(props: { self: Service; categories: Category[] }) {
 function CreateNewService(props: {
     location: Location;
     categories: Category[];
+    reload: () => void;
 }) {
     const [category, setCategory] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -74,12 +79,14 @@ function CreateNewService(props: {
         <Paper className="service-item-create">
             <Stack spacing={1} direction="row">
                 <FormControl className="category-select">
-                    <InputLabel id="category-select-label">Category</InputLabel>
+                    <InputLabel id="category-select-label" required>
+                        Category
+                    </InputLabel>
                     <Select
                         labelId="category-select-label"
                         value={category}
                         onChange={(event) => setCategory(event.target.value)}
-                        input={<OutlinedInput label="Category" />}
+                        input={<OutlinedInput label="Category" required />}
                         renderValue={(value: string) => {
                             const c: Category = props.categories.filter(
                                 (v) => v.category_id === value
@@ -130,8 +137,27 @@ function CreateNewService(props: {
                     InputLabelProps={{ shrink: true }}
                     value={name}
                     onChange={(event) => setName(event.target.value)}
+                    required
                 />
-                <IconButton color="success">
+                <IconButton
+                    color="success"
+                    className="create-btn"
+                    onClick={() => {
+                        post<string>("/services", {
+                            data: {
+                                name,
+                                category,
+                                location: props.location.location_id,
+                            },
+                        }).then((result) => {
+                            if (result.success) {
+                                props.reload();
+                                setName("");
+                            }
+                        });
+                    }}
+                    disabled={name.length === 0}
+                >
                     <MdIcons.MdCheck size={24} />
                 </IconButton>
             </Stack>
@@ -146,6 +172,7 @@ function LocationItem(props: {
     categories: Category[];
     services: Service[];
     search: Search;
+    reload: () => void;
 }) {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const login = useLogin();
@@ -165,6 +192,7 @@ function LocationItem(props: {
                         locations={props.locations}
                         services={props.services}
                         search={props.search}
+                        reload={props.reload}
                     />
                 )),
             ...props.services
@@ -174,6 +202,7 @@ function LocationItem(props: {
                         self={v}
                         key={v.service_id}
                         categories={props.categories}
+                        reload={props.reload}
                     />
                 )),
         ]);
@@ -228,6 +257,7 @@ function LocationItem(props: {
                                     <CreateNewService
                                         location={props.self}
                                         categories={props.categories}
+                                        reload={props.reload}
                                     />
                                 )}
                             </Stack>
@@ -250,7 +280,7 @@ export function IndexPage() {
     const [locations, setLocations] = useState<Location[]>([]);
     const [services, setServices] = useState<Service[]>([]);
 
-    useEffect(() => {
+    function reload() {
         get<Category[]>("/categories").then((result) => {
             if (result.success) {
                 setCategories(result.data);
@@ -266,7 +296,9 @@ export function IndexPage() {
                 setServices(result.data);
             }
         });
-    }, [location]);
+    }
+
+    useEffect(reload, [location]);
 
     useEffect(() => {}, [params]);
 
@@ -375,6 +407,7 @@ export function IndexPage() {
                                 selectors: searchOpts,
                                 text: search,
                             }}
+                            reload={reload}
                         />
                     ))}
             </Paper>
