@@ -2,10 +2,8 @@ import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { ReactNode, useEffect } from "react";
 import {
-    MdCategory,
     MdChevronLeft,
     MdChevronRight,
-    MdLocationPin,
     MdQuestionAnswer,
     MdRefresh,
 } from "react-icons/md";

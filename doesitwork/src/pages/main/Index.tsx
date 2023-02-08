@@ -1,13 +1,17 @@
 import {
     Autocomplete,
-    Button,
     Chip,
+    FormControl,
     IconButton,
     InputAdornment,
+    InputLabel,
     ListItem,
     ListItemIcon,
     ListItemText,
+    MenuItem,
+    OutlinedInput,
     Paper,
+    Select,
     TextField,
     Typography,
     useTheme,
@@ -29,7 +33,110 @@ type Search = {
 };
 
 function ServiceItem(props: { self: Service; categories: Category[] }) {
-    return <Paper className="service-item"></Paper>;
+    const category: Category | null =
+        props.categories.filter(
+            (v) => props.self.category === v.category_id
+        )[0] ?? null;
+    return (
+        <Paper className="service-item">
+            {category ? (
+                (MdIcons as any)[category.icon] ? (
+                    (MdIcons as any)[category.icon]({
+                        size: 24,
+                        className: "icon",
+                    })
+                ) : (
+                    <MdIcons.MdError size={24} className="icon" />
+                )
+            ) : (
+                <MdIcons.MdError size={24} className="icon" />
+            )}
+            <Typography className="service-name">{props.self.name}</Typography>
+            <Typography className="category-name">
+                {category ? category.name : "UNKNOWN"}
+            </Typography>
+        </Paper>
+    );
+}
+
+function CreateNewService(props: {
+    location: Location;
+    categories: Category[];
+}) {
+    const [category, setCategory] = useState<string>("");
+    const [name, setName] = useState<string>("");
+
+    useEffect(() => {
+        setCategory(props.categories[0] ? props.categories[0].category_id : "");
+    }, []);
+
+    return (
+        <Paper className="service-item-create">
+            <Stack spacing={1} direction="row">
+                <FormControl className="category-select">
+                    <InputLabel id="category-select-label">Category</InputLabel>
+                    <Select
+                        labelId="category-select-label"
+                        value={category}
+                        onChange={(event) => setCategory(event.target.value)}
+                        input={<OutlinedInput label="Category" />}
+                        renderValue={(value: string) => {
+                            const c: Category = props.categories.filter(
+                                (v) => v.category_id === value
+                            )[0];
+                            return (
+                                <Stack spacing={1} direction="row">
+                                    {(MdIcons as any)[c.icon] ? (
+                                        (MdIcons as any)[c.icon]({
+                                            size: 24,
+                                            className: "icon",
+                                        })
+                                    ) : (
+                                        <MdIcons.MdError
+                                            size={24}
+                                            className="icon"
+                                        />
+                                    )}
+                                    <Typography>{c.name}</Typography>
+                                </Stack>
+                            );
+                        }}
+                    >
+                        {props.categories.map((c) => (
+                            <MenuItem key={c.category_id} value={c.category_id}>
+                                <Stack spacing={1} direction="row">
+                                    {(MdIcons as any)[c.icon] ? (
+                                        (MdIcons as any)[c.icon]({
+                                            size: 24,
+                                            className: "icon",
+                                        })
+                                    ) : (
+                                        <MdIcons.MdError
+                                            size={24}
+                                            className="icon"
+                                        />
+                                    )}
+                                    <Typography>{c.name}</Typography>
+                                </Stack>
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <TextField
+                    fullWidth
+                    className="service-name-field"
+                    label="Name"
+                    placeholder="New Service"
+                    InputLabelProps={{ shrink: true }}
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                />
+                <IconButton color="success">
+                    <MdIcons.MdCheck size={24} />
+                </IconButton>
+            </Stack>
+        </Paper>
+    );
 }
 
 function LocationItem(props: {
@@ -118,13 +225,10 @@ function LocationItem(props: {
                             <Stack spacing={1}>
                                 {children}
                                 {login.loggedIn && (
-                                    <Button
-                                        className="new-service"
-                                        variant="outlined"
-                                        startIcon={<MdIcons.MdAdd />}
-                                    >
-                                        New Service
-                                    </Button>
+                                    <CreateNewService
+                                        location={props.self}
+                                        categories={props.categories}
+                                    />
                                 )}
                             </Stack>
                         </Paper>

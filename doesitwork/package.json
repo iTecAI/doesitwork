@@ -37,7 +37,8 @@
       "react-app/jest"
     ],
     "rules": {
-      "no-useless-escape": "off"
+      "no-useless-escape": "off",
+      "react-hooks/exhaustive-deps": "off"
     }
   },
   "browserslist": {
