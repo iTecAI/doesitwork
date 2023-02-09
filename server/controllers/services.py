@@ -2,7 +2,7 @@ from starlite import Controller, get, post, delete, Provide, put
 from starlite.exceptions import NotFoundException
 from typing import TypedDict, Union
 from _types import AppState, Service, Vote
-import hashlib
+import time
 import uuid
 from deps import guard_isAdmin
 
@@ -10,6 +10,11 @@ class CreateService(TypedDict):
     name: str
     category: str
     location: str
+
+
+class NewVote(TypedDict):
+    status: bool
+    flags: list[str]
 
 class ServiceController(Controller):
     path = "/services"
@@ -24,3 +29,19 @@ class ServiceController(Controller):
         app_state.database.services.insert_one(new_service)
         return new_service["service_id"]
 
+    @delete("/{service_id:str}", guards=[guard_isAdmin], status_code=200)
+    async def delete_service(self, app_state: AppState, service_id: str) -> None:
+        app_state.database.services.delete_one({"service_id": service_id})
+
+    @post("/{service_id:str}/vote", status_code=200)
+    async def vote_for_service(self, app_state: AppState, service_id: str, data: NewVote) -> Vote:
+        cur_service: Service = app_state.database.services.find_one(
+            {"service_id": service_id})
+        if cur_service == None:
+            raise NotFoundException(detail="Service not found.")
+        new_vote = Vote(working=data["status"],
+                        flags=data["flags"], timestamp=time.time())
+        cur_service["votes"].append(new_vote)
+        app_state.database.services.replace_one(
+            {"service_id": service_id}, cur_service, upsert=True)
+        return new_vote

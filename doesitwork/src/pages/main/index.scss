@@ -23,9 +23,13 @@
         overflow: auto;
 
         .location-item {
-            padding: 16px;
+            padding: 8px;
             position: relative;
             box-sizing: border-box;
+
+            & > .MuiStack-root {
+                padding: 8px;
+            }
 
             .expand-btn {
                 position: absolute;
@@ -46,12 +50,29 @@
         .service-item {
             position: relative;
             padding: 16px;
-            padding-left: 64px;
+            padding-left: 48px;
+            transition: border-color 0.2s;
+            border: 1px solid #00000000;
+            box-sizing: border-box;
+            cursor: pointer;
+
+            &.voting {
+                padding-left: 16px;
+                padding-right: 16px !important;
+            }
+
+            &:not(.voting) {
+                padding-bottom: 60px;
+
+                .icon {
+                    top: calc(50% - 20px);
+                }
+            }
 
             .icon {
                 position: absolute;
                 top: 50%;
-                left: 16px;
+                left: 8px;
                 transform: translate(0, -50%);
             }
 
@@ -63,18 +84,85 @@
                 font-size: 12px;
                 opacity: 0.6;
             }
+
+            .service-actions {
+                position: absolute;
+                top: calc(50% - 20px);
+                right: 8px;
+                transform: translate(0, -50%);
+            }
+
+            &.admin {
+                padding-right: 48px;
+            }
+
+            .vote-bar {
+                position: absolute;
+                bottom: 4px;
+                left: 15%;
+                display: inline-block;
+                width: 70%;
+                height: 6px;
+                border-radius: 3px;
+                overflow: hidden;
+                background-color: #00000044;
+
+                .bar {
+                    display: inline-block;
+                    height: 100%;
+                    position: absolute;
+                    top: 0px;
+                    transition: width 0.2s;
+
+                    &.working {
+                        left: 0px;
+                    }
+
+                    &.not-working {
+                        right: 0px;
+                    }
+                }
+            }
+
+            .problems {
+                position: absolute;
+                left: 15%;
+                bottom: 16px;
+                display: inline-block;
+                width: 70%;
+                height: 38px;
+                padding: 6px;
+
+                .no-data {
+                    position: absolute;
+                    top: calc(50% + 1px);
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    opacity: 0.75;
+                }
+
+                .scroll-container {
+                    overflow: hidden;
+                }
+            }
         }
 
         .service-item-create {
             position: relative;
-            padding: 16px;
+            padding: 12px;
 
             .category-select {
-                width: calc(max(256px, 15%) + 0px);
+                width: calc(max(256px, 25%) + 0px);
+
+                @media screen and (max-width: 800px) {
+                    & {
+                        width: 100%;
+                    }
+                }
             }
 
             .create-btn {
-                min-width: 57px;
+                min-width: 41px;
             }
         }
     }
