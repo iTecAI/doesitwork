@@ -11,7 +11,7 @@ import {
     useTheme,
 } from "@mui/material";
 import { useConfirm } from "material-ui-confirm";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Service, Category, Vote } from "../../types";
 import { post, del } from "../../util/api";
 import { useHorizontalScroll } from "../../util/hscroll";
@@ -19,6 +19,88 @@ import { useLogin } from "../../util/LoginState";
 import { getChanceWorking, getFlagNumbers } from "../../util/voteCalculations";
 import * as MdIcons from "react-icons/md";
 import "./index.scss";
+import { AxisOptions, Chart } from "react-charts";
+
+function VoteGraph(props: { votes: Vote[] }) {
+    const mobile = useMediaQuery("(max-width:800px)");
+    const RANGE = mobile ? 7 : 14; // Days to cover
+    const DAY_MS = 1000 * 60 * 60 * 24; // ms in one day (approx)
+    const theme = useTheme();
+    const data = useMemo(() => {
+        const dateMapping: { [key: string]: Vote[] } = {};
+        const tempDate = new Date(Date.now());
+        tempDate.setHours(12, 0, 0, 0);
+        const currentDate = tempDate.getTime();
+        const startDate = currentDate - DAY_MS * RANGE;
+        for (let d = startDate; d <= currentDate; d += DAY_MS) {
+            const dateString = new Date(d).toDateString();
+            dateMapping[dateString] = [
+                ...props.votes.filter(
+                    (v) =>
+                        new Date(v.timestamp * 1000).toDateString() ===
+                        dateString
+                ),
+            ];
+        }
+
+        const genData: any = [
+            {
+                label: "Working",
+                data: Object.keys(dateMapping).map((d) => {
+                    return {
+                        date: d,
+                        votes: dateMapping[d].filter((v) => v.working).length,
+                    };
+                }),
+            },
+            {
+                label: "Not Working",
+                data: Object.keys(dateMapping).map((d) => {
+                    return {
+                        date: d,
+                        votes: dateMapping[d].filter((v) => !v.working).length,
+                    };
+                }),
+            },
+        ];
+        return genData;
+    }, []);
+
+    const primaryAxis = useMemo(
+        (): AxisOptions<{ date: string; votes: number }> => ({
+            getValue: (datum) => datum.date,
+        }),
+
+        []
+    );
+
+    const secondaryAxes = useMemo(
+        (): AxisOptions<{ date: string; votes: number }>[] => [
+            {
+                getValue: (datum) => datum.votes,
+            },
+        ],
+
+        []
+    );
+
+    return (
+        <Paper className="vote-chart-container">
+            <Chart
+                className="vote-chart"
+                options={{
+                    data,
+                    primaryAxis,
+                    secondaryAxes,
+                    defaultColors: [
+                        theme.palette.success.dark,
+                        theme.palette.error.dark,
+                    ],
+                }}
+            />
+        </Paper>
+    );
+}
 
 export function ServiceItem(props: {
     self: Service;
@@ -259,6 +341,7 @@ export function ServiceItem(props: {
                             </span>
                         )}
                     </Paper>
+                    <VoteGraph votes={props.self.votes} />
                 </Stack>
             ) : (
                 <>

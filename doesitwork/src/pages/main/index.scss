@@ -97,6 +97,18 @@
                         }
                     }
                 }
+
+                .vote-chart-container {
+                    position: relative;
+                    display: inline-block;
+                    width: 100%;
+                    height: 384px;
+                    padding: 4px;
+                    box-sizing: border-box;
+                    background-color: #eee;
+                    user-select: none;
+                    pointer-events: none;
+                }
             }
 
             .icon {
