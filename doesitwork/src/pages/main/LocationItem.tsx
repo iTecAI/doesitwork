@@ -6,11 +6,8 @@ import { CreateNewService } from "./CreateService";
 import { ServiceItem } from "./ServiceItem";
 import * as MdIcons from "react-icons/md";
 import "./index.scss";
-
-type Search = {
-    selectors: (Category | Location)[];
-    text: string;
-};
+import { isServiceVisible, Search } from "./utils";
+import { useNavigate } from "react-router";
 
 export function LocationItem(props: {
     self: Location;
@@ -24,6 +21,11 @@ export function LocationItem(props: {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const login = useLogin();
     const theme = useTheme();
+    const nav = useNavigate();
+
+    useEffect(() => {
+        setIsExpanded(props.expanded.includes(props.self.location_id));
+    }, [props.expanded]);
 
     const [children, setChildren] = useState<JSX.Element[]>([]);
 
@@ -34,7 +36,7 @@ export function LocationItem(props: {
                 .map((v) => (
                     <LocationItem
                         self={v}
-                        expanded={[]}
+                        expanded={props.expanded}
                         categories={props.categories}
                         locations={props.locations}
                         services={props.services}
@@ -44,7 +46,11 @@ export function LocationItem(props: {
                     />
                 )),
             ...props.services
-                .filter((v) => v.location === props.self.location_id)
+                .filter(
+                    (v) =>
+                        v.location === props.self.location_id &&
+                        isServiceVisible(props.search, v)
+                )
                 .map((v) => (
                     <ServiceItem
                         self={v}
@@ -75,42 +81,34 @@ export function LocationItem(props: {
                         {props.self.name}
                     </Typography>
                     <IconButton
-                        className={`expand-btn${
-                            isExpanded ||
-                            props.self.parent_id === null ||
-                            props.self.parent_id === "root" ||
-                            props.self.parent_id === ""
-                                ? " expanded"
-                                : ""
-                        }`}
+                        className={`expand-btn${isExpanded ? " expanded" : ""}`}
                         onClick={() => setIsExpanded(!isExpanded)}
-                        disabled={
-                            props.self.parent_id === null ||
-                            props.self.parent_id === "root" ||
-                            props.self.parent_id === ""
-                        }
                     >
                         <MdIcons.MdArrowDropDown />
                     </IconButton>
+                    <IconButton
+                        className="link-btn"
+                        onClick={() =>
+                            nav(`/location/${props.self.location_id}`)
+                        }
+                    >
+                        <MdIcons.MdLink />
+                    </IconButton>
                 </Stack>
-                {(isExpanded ||
-                    props.self.parent_id === null ||
-                    props.self.parent_id === "root" ||
-                    props.self.parent_id === "") &&
-                    (children.length > 0 || login.loggedIn) && (
-                        <Paper variant="outlined" className="location-children">
-                            <Stack spacing={0.5}>
-                                {children}
-                                {login.loggedIn && (
-                                    <CreateNewService
-                                        location={props.self}
-                                        categories={props.categories}
-                                        reload={props.reload}
-                                    />
-                                )}
-                            </Stack>
-                        </Paper>
-                    )}
+                {isExpanded && (children.length > 0 || login.loggedIn) && (
+                    <Paper variant="outlined" className="location-children">
+                        <Stack spacing={0.5}>
+                            {children}
+                            {login.loggedIn && (
+                                <CreateNewService
+                                    location={props.self}
+                                    categories={props.categories}
+                                    reload={props.reload}
+                                />
+                            )}
+                        </Stack>
+                    </Paper>
+                )}
             </Stack>
         </Paper>
     );

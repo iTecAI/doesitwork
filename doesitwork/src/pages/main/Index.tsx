@@ -18,6 +18,7 @@ import "./index.scss";
 import * as MdIcons from "react-icons/md";
 import { isEqual } from "lodash";
 import { LocationItem } from "./LocationItem";
+import { expandLocationId, getVisibleLocations } from "./utils";
 
 export function IndexPage() {
     const params: { location_id?: string } = useParams<{
@@ -30,6 +31,9 @@ export function IndexPage() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [locations, setLocations] = useState<Location[]>([]);
     const [services, setServices] = useState<Service[]>([]);
+    const [shownLocations, setShownLocations] = useState<string[]>([]);
+    const [expanded, setExpanded] = useState<string[]>([]);
+    const [urlUpdated, setUrlUpdated] = useState<boolean>(false);
 
     function reload() {
         get<Category[]>("/categories").then((result) => {
@@ -51,7 +55,39 @@ export function IndexPage() {
 
     useEffect(reload, [location]);
 
-    useEffect(() => {}, [params]);
+    useEffect(() => {
+        setUrlUpdated(false);
+    }, [params]);
+
+    useEffect(() => {
+        if (
+            params.location_id &&
+            !urlUpdated &&
+            locations.length > 0 &&
+            services.length > 0 &&
+            categories.length > 0
+        ) {
+            const toExpand = expandLocationId(params.location_id, locations);
+            console.log(toExpand);
+            setExpanded(toExpand);
+            setSearch("");
+            setSearchOpts([]);
+            setUrlUpdated(true);
+        }
+    }, [locations, services, categories]);
+
+    useEffect(() => {
+        setShownLocations(
+            getVisibleLocations(
+                {
+                    selectors: searchOpts,
+                    text: search,
+                },
+                services,
+                locations
+            )
+        );
+    }, [search, searchOpts, services, locations]);
 
     return (
         <Box className="index-content">
@@ -144,14 +180,15 @@ export function IndexPage() {
                     {locations
                         .filter(
                             (v) =>
-                                v.parent_id === null ||
-                                v.parent_id === "root" ||
-                                v.parent_id === ""
+                                (v.parent_id === null ||
+                                    v.parent_id === "root" ||
+                                    v.parent_id === "") &&
+                                shownLocations.includes(v.location_id)
                         )
                         .map((v) => (
                             <LocationItem
                                 self={v}
-                                expanded={[]}
+                                expanded={expanded}
                                 categories={categories}
                                 locations={locations}
                                 services={services}
