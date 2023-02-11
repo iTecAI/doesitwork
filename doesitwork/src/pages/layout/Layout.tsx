@@ -74,7 +74,7 @@ export function Layout(props: { organization: string }) {
             <AppBar className="navbar">
                 <Stack direction="row" spacing={1}>
                     <img
-                        src="./icon.svg"
+                        src="/icon.svg"
                         className="icon"
                         alt="Application icon"
                     />
