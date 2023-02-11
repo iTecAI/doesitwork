@@ -373,9 +373,16 @@ export function ServiceItem(props: {
                                 size="small"
                                 onClick={(e) => {
                                     e.stopPropagation();
+                                    confirm({
+                                        description: `This will reset all votes for ${props.self.name}.`,
+                                    }).then(() => {
+                                        del(
+                                            `/services/${props.self.service_id}/votes`
+                                        ).then(() => props.reload());
+                                    });
                                 }}
                             >
-                                <MdIcons.MdEdit size={20} />
+                                <MdIcons.MdRefresh size={20} />
                             </IconButton>
                             <IconButton
                                 color="error"
