@@ -4,7 +4,7 @@ import { ReactNode, useEffect } from "react";
 import {
     MdChevronLeft,
     MdChevronRight,
-    MdQuestionAnswer,
+    //MdQuestionAnswer,
     MdRefresh,
 } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -21,7 +21,7 @@ export function PanelWrapper(props: {
     refresh?: () => void;
 }) {
     return (
-        <Grid item xs={12} lg={3}>
+        <Grid item xs={12} lg={4}>
             <Paper className="settings-panel">
                 <Box className="panel-title">
                     <Box className="icon">{props.icon}</Box>
@@ -49,14 +49,14 @@ export function PanelWrapper(props: {
     );
 }
 
-function RequestPanel() {
+/*function RequestPanel() {
     return (
         <PanelWrapper
             text="Requests"
             icon={<MdQuestionAnswer size={24} />}
         ></PanelWrapper>
     );
-}
+}*/
 
 export function SystemSettings() {
     const login = useLogin();
@@ -72,7 +72,6 @@ export function SystemSettings() {
         <Grid container spacing={1} className="settings-grid">
             <CategoryPanel />
             <LocationPanel />
-            <RequestPanel />
             <UserPanel />
         </Grid>
     );

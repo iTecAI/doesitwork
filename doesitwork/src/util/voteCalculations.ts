@@ -31,7 +31,9 @@ export function getFlagNumbers(votes: Vote[]): { [key: string]: number } {
     });
     const result: { [key: string]: number } = {};
     Object.keys(resultRaw).forEach(
-        (v) => (result[v] = resultRaw[v] / votes.length)
+        (v) =>
+            (result[v] =
+                resultRaw[v] / votes.filter((vt) => !vt.working).length)
     );
     return result;
 }
