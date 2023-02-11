@@ -51,6 +51,7 @@ function ServiceItem(props: {
     const login = useLogin();
     const theme = useTheme();
     const [voting, setVoting] = useState<boolean>(false);
+    const mobile = useMediaQuery("(max-width:800px)");
 
     // Voting values
     const [flags, setFlags] = useState<string[]>([]);
@@ -78,74 +79,204 @@ function ServiceItem(props: {
             }}
         >
             {voting ? (
-                <Stack className="vote-box" spacing={2} direction="row">
-                    <IconButton
-                        color="success"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            post<Vote>(
-                                `/services/${props.self.service_id}/vote`,
-                                { data: { status: true, flags: [] } }
-                            ).then(() => {
-                                setFlags([]);
-                                setVoting(false);
-                                props.reload();
-                            });
-                        }}
-                    >
-                        <MdIcons.MdThumbUp />
-                    </IconButton>
-                    <Divider
-                        orientation="vertical"
-                        sx={{
-                            minHeight: "40px",
-                        }}
-                    />
-                    <IconButton
-                        color="error"
-                        disabled={
-                            category.flags.length > 0 && flags.length === 0
-                        }
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            post<Vote>(
-                                `/services/${props.self.service_id}/vote`,
-                                { data: { status: false, flags } }
-                            ).then(() => {
-                                setFlags([]);
-                                setVoting(false);
-                                props.reload();
-                            });
-                        }}
-                    >
-                        <MdIcons.MdThumbDown />
-                    </IconButton>
-                    <Autocomplete
-                        options={category.flags}
-                        multiple
-                        fullWidth
-                        size="small"
-                        renderInput={(params) => (
-                            <TextField {...params} label="What's Wrong?" />
+                <Stack className="vote-box" spacing={2} direction="column">
+                    {mobile ? (
+                        <>
+                            <Stack
+                                spacing={2}
+                                direction="row"
+                                sx={{ marginLeft: "auto", marginRight: "auto" }}
+                            >
+                                <IconButton
+                                    color="success"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        post<Vote>(
+                                            `/services/${props.self.service_id}/vote`,
+                                            {
+                                                data: {
+                                                    status: true,
+                                                    flags: [],
+                                                },
+                                            }
+                                        ).then(() => {
+                                            setFlags([]);
+                                            setVoting(false);
+                                            props.reload();
+                                        });
+                                    }}
+                                >
+                                    <MdIcons.MdThumbUp />
+                                </IconButton>
+                                <Divider
+                                    orientation="vertical"
+                                    sx={{
+                                        minHeight: "40px",
+                                    }}
+                                />
+                                <IconButton
+                                    color="error"
+                                    disabled={
+                                        category.flags.length > 0 &&
+                                        flags.length === 0
+                                    }
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        post<Vote>(
+                                            `/services/${props.self.service_id}/vote`,
+                                            { data: { status: false, flags } }
+                                        ).then(() => {
+                                            setFlags([]);
+                                            setVoting(false);
+                                            props.reload();
+                                        });
+                                    }}
+                                >
+                                    <MdIcons.MdThumbDown />
+                                </IconButton>
+                                <Divider
+                                    orientation="vertical"
+                                    sx={{
+                                        minHeight: "40px",
+                                    }}
+                                />
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setFlags([]);
+                                        setVoting(false);
+                                    }}
+                                >
+                                    <MdIcons.MdClose />
+                                </IconButton>
+                            </Stack>
+                            <Autocomplete
+                                options={category.flags}
+                                multiple
+                                fullWidth
+                                size="small"
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="What's Wrong?"
+                                    />
+                                )}
+                                value={flags}
+                                onChange={(event, value) => setFlags(value)}
+                            />
+                        </>
+                    ) : (
+                        <Stack spacing={2} direction="row">
+                            <IconButton
+                                color="success"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    post<Vote>(
+                                        `/services/${props.self.service_id}/vote`,
+                                        { data: { status: true, flags: [] } }
+                                    ).then(() => {
+                                        setFlags([]);
+                                        setVoting(false);
+                                        props.reload();
+                                    });
+                                }}
+                            >
+                                <MdIcons.MdThumbUp />
+                            </IconButton>
+                            <Divider
+                                orientation="vertical"
+                                sx={{
+                                    minHeight: "40px",
+                                }}
+                            />
+                            <IconButton
+                                color="error"
+                                disabled={
+                                    category.flags.length > 0 &&
+                                    flags.length === 0
+                                }
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    post<Vote>(
+                                        `/services/${props.self.service_id}/vote`,
+                                        { data: { status: false, flags } }
+                                    ).then(() => {
+                                        setFlags([]);
+                                        setVoting(false);
+                                        props.reload();
+                                    });
+                                }}
+                            >
+                                <MdIcons.MdThumbDown />
+                            </IconButton>
+                            <Autocomplete
+                                options={category.flags}
+                                multiple
+                                fullWidth
+                                size="small"
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="What's Wrong?"
+                                    />
+                                )}
+                                value={flags}
+                                onChange={(event, value) => setFlags(value)}
+                            />
+                            <Divider
+                                orientation="vertical"
+                                sx={{
+                                    minHeight: "40px",
+                                }}
+                            />
+                            <IconButton
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFlags([]);
+                                    setVoting(false);
+                                }}
+                            >
+                                <MdIcons.MdClose />
+                            </IconButton>
+                        </Stack>
+                    )}
+                    <Paper className="problem-box" variant="outlined">
+                        {Object.keys(flagCounts).length > 0 ? (
+                            <div className="problem-scroll" ref={scref as any}>
+                                <Stack
+                                    spacing={0.5}
+                                    className="problem-stack"
+                                    direction="row"
+                                >
+                                    {Object.keys(flagCounts).map((flag) => (
+                                        <Chip
+                                            className="problem"
+                                            key={flag}
+                                            size="small"
+                                            label={
+                                                <>
+                                                    {flag} :{" "}
+                                                    {Math.round(
+                                                        flagCounts[flag] * 100
+                                                    )}
+                                                    %
+                                                </>
+                                            }
+                                        />
+                                    ))}
+                                </Stack>
+                            </div>
+                        ) : (
+                            <span className="no-problems-container">
+                                <Typography
+                                    variant="overline"
+                                    className="no-problems"
+                                >
+                                    No Problems Recorded
+                                </Typography>
+                            </span>
                         )}
-                        value={flags}
-                        onChange={(event, value) => setFlags(value)}
-                    />
-                    <Divider
-                        orientation="vertical"
-                        sx={{
-                            minHeight: "40px",
-                        }}
-                    />
-                    <IconButton
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setFlags([]);
-                            setVoting(false);
-                        }}
-                    >
-                        <MdIcons.MdClose />
-                    </IconButton>
+                    </Paper>
                 </Stack>
             ) : (
                 <>
@@ -199,31 +330,6 @@ function ServiceItem(props: {
                             </IconButton>
                         </Stack>
                     )}
-
-                    <Paper className="problems" variant="outlined">
-                        <div ref={scref as any} className="scroll-container">
-                            <Stack direction="row" spacing={1}>
-                                {props.self.votes.length > 0 ? (
-                                    Object.keys(flagCounts).map((v) => (
-                                        <Chip
-                                            key={v}
-                                            size="small"
-                                            label={`${v} : ${Math.round(
-                                                flagCounts[v] * 100
-                                            )}%`}
-                                        />
-                                    ))
-                                ) : (
-                                    <Typography
-                                        variant="overline"
-                                        className="no-data"
-                                    >
-                                        No Data
-                                    </Typography>
-                                )}
-                            </Stack>
-                        </div>
-                    </Paper>
                     <div className="vote-bar">
                         <div
                             className="working bar"
@@ -469,7 +575,7 @@ function LocationItem(props: {
                     props.self.parent_id === "") &&
                     (children.length > 0 || login.loggedIn) && (
                         <Paper variant="outlined" className="location-children">
-                            <Stack spacing={1}>
+                            <Stack spacing={0.5}>
                                 {children}
                                 {login.loggedIn && (
                                     <CreateNewService
@@ -607,28 +713,30 @@ export function IndexPage() {
                 fullWidth
             />
             <Paper className="content-area" variant="outlined">
-                {locations
-                    .filter(
-                        (v) =>
-                            v.parent_id === null ||
-                            v.parent_id === "root" ||
-                            v.parent_id === ""
-                    )
-                    .map((v) => (
-                        <LocationItem
-                            self={v}
-                            expanded={[]}
-                            categories={categories}
-                            locations={locations}
-                            services={services}
-                            search={{
-                                selectors: searchOpts,
-                                text: search,
-                            }}
-                            reload={reload}
-                            key={v.location_id}
-                        />
-                    ))}
+                <Stack spacing={0.5}>
+                    {locations
+                        .filter(
+                            (v) =>
+                                v.parent_id === null ||
+                                v.parent_id === "root" ||
+                                v.parent_id === ""
+                        )
+                        .map((v) => (
+                            <LocationItem
+                                self={v}
+                                expanded={[]}
+                                categories={categories}
+                                locations={locations}
+                                services={services}
+                                search={{
+                                    selectors: searchOpts,
+                                    text: search,
+                                }}
+                                reload={reload}
+                                key={v.location_id}
+                            />
+                        ))}
+                </Stack>
             </Paper>
         </Box>
     );

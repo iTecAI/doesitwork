@@ -45,3 +45,8 @@ class ServiceController(Controller):
         app_state.database.services.replace_one(
             {"service_id": service_id}, cur_service, upsert=True)
         return new_vote
+
+    @delete("/{service_id:str}/votes", guards=[guard_isAdmin], status_code=200)
+    async def delete_service(self, app_state: AppState, service_id: str) -> None:
+        app_state.database.services.update_one(
+            {"service_id": service_id}, {"$set": {"votes": []}})

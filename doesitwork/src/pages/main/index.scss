@@ -16,7 +16,7 @@
         position: relative;
         display: inline-block;
         box-sizing: border-box;
-        padding: 16px;
+        padding: 4px;
         margin-top: -32px;
         width: 100%;
         height: calc(100% - 72px);
@@ -43,7 +43,7 @@
             }
 
             .location-children {
-                padding: 8px;
+                padding: 4px;
             }
         }
 
@@ -57,15 +57,45 @@
             cursor: pointer;
 
             &.voting {
-                padding-left: 16px;
-                padding-right: 16px !important;
-            }
+                padding-left: 8px;
+                padding-right: 8px !important;
 
-            &:not(.voting) {
-                padding-bottom: 60px;
+                .problem-box {
+                    position: relative;
+                    padding: 4px;
+                    overflow: hidden;
 
-                .icon {
-                    top: calc(50% - 20px);
+                    .no-problems-container {
+                        position: relative;
+                        display: inline-block;
+                        width: 100%;
+                        height: 32px;
+                        margin-bottom: -6px;
+                        user-select: none;
+                        pointer-events: none;
+                        opacity: 0.6;
+
+                        .no-problems {
+                            position: absolute;
+                            width: fit-content;
+                            white-space: nowrap;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                    }
+
+                    .problem-scroll {
+                        overflow: hidden;
+
+                        .problem-stack {
+                            overflow: visible;
+                            white-space: nowrap;
+                            display: inline-block;
+                            width: fit-content;
+                            height: 100%;
+                        }
+                    }
                 }
             }
 
@@ -74,38 +104,50 @@
                 top: 50%;
                 left: 8px;
                 transform: translate(0, -50%);
+                z-index: 10;
             }
 
             .service-name {
                 font-size: 16px;
+                z-index: 10;
             }
 
             .category-name {
                 font-size: 12px;
                 opacity: 0.6;
+                z-index: 10;
             }
 
             .service-actions {
                 position: absolute;
-                top: calc(50% - 20px);
+                top: 50%;
                 right: 8px;
                 transform: translate(0, -50%);
+                z-index: 10;
             }
 
             &.admin {
                 padding-right: 48px;
             }
 
+            &:hover .vote-bar {
+                opacity: 0.25;
+            }
+
             .vote-bar {
+                pointer-events: none;
                 position: absolute;
-                bottom: 4px;
-                left: 15%;
+                top: 4px;
+                left: 4px;
                 display: inline-block;
-                width: 70%;
-                height: 6px;
-                border-radius: 3px;
+                width: calc(100% - 8px);
+                height: calc(100% - 8px);
+                border-radius: 4px;
                 overflow: hidden;
                 background-color: #00000044;
+                opacity: 0.15;
+                z-index: 0;
+                transition: opacity 0.2s;
 
                 .bar {
                     display: inline-block;
@@ -121,28 +163,6 @@
                     &.not-working {
                         right: 0px;
                     }
-                }
-            }
-
-            .problems {
-                position: absolute;
-                left: 15%;
-                bottom: 16px;
-                display: inline-block;
-                width: 70%;
-                height: 38px;
-                padding: 6px;
-
-                .no-data {
-                    position: absolute;
-                    top: calc(50% + 1px);
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    opacity: 0.75;
-                }
-
-                .scroll-container {
-                    overflow: hidden;
                 }
             }
         }
