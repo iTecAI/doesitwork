@@ -35,3 +35,4 @@ rm -rf ./build/backend/__pycache__ ./build/backend/.env
 echo "Moved backend to ./build/backend"
 
 # Build & tag docker image
+docker build -t ghcr.io/$1/doesitwork:$VERSION .
