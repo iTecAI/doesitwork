@@ -11,3 +11,5 @@ VERSION=(${VERSION_SPLIT[2]})
 
 scripts/build.sh $1
 docker push ghcr.io/$1/doesitwork:$VERSION
+docker build -t ghcr.io/$1/doesitwork:latest .
+docker push ghcr.io/$1/doesitwork:latest
