@@ -17,7 +17,7 @@ def initialize(state: State):
     state.organization_color = os.getenv("CUSTOM_BRAND")
 
     # Initialize DB
-    client = MongoClient(host=f'{os.getenv("MONGO_HOST", "localhost")}:{int(os.getenv("MONGO_PORT", 27017))}/{os.getenv("MONGO_DATABASE", "doesitwork")}', username=os.getenv(
+    client = MongoClient(host=f'mongodb://{os.getenv("MONGO_HOST", "localhost")}:{int(os.getenv("MONGO_PORT", 27017))}/{os.getenv("MONGO_DATABASE", "doesitwork")}', username=os.getenv(
         "MONGO_USER"), password=os.getenv("MONGO_PASS"), tls=True if os.getenv("MONGO_TLS", False) == "yes" else False)
     state.database = client[os.getenv("MONGO_DATABASE", "doesitwork")]
 
