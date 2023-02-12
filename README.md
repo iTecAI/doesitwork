@@ -21,3 +21,30 @@ ROOT_PASS=<INITIAL ROOT PASSWORD, default admin>
 CUSTOM_ORG=<ORGANIZATION NAME, default none>
 CUSTOM_BRAND=<ORGANIZATION BRAND COLOR, default #6b4493 (https://colorpicker.me/#6b4493)>
 ```
+
+## Deploying On Container Platform
+
+Use the following image: `ghcr.io/itecai/doesitwork:latest`
+Once deployed, configure the above environment variables as needed for your environment.
+
+## Developing/Contributing
+**Clone Repository**
+```
+git clone https://github.com/iTecAI/doesitwork.git
+cd doesitwork
+```
+
+**Setup**
+Create a `.env` file in the `server` directory with your preferred environment.
+
+**Run Backend**
+```
+cd server
+./run.sh
+```
+
+**Run Client**
+```
+cd doesitwork
+yarn start
+```
